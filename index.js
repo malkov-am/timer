@@ -16,7 +16,9 @@ const createTimerAnimator = () => {
     // Вспомогательная функция, добавляющая впереди 0, если число имеет всего 1 разряд
     const addZeroSymbol = (number) => number.toString().padStart(2, "0");
     // Возвращаем строку формата ЧЧ:ММ:СС
-    return `${addZeroSymbol(hoursLeft)}:${addZeroSymbol(minutesLeft)}:${addZeroSymbol(secondsLeft)}`;
+    return `${addZeroSymbol(hoursLeft)}:${addZeroSymbol(
+      minutesLeft
+    )}:${addZeroSymbol(secondsLeft)}`;
   };
   // Переменная для проверки, запущен ли таймер, чтобы не запустить 2 таймера одновременно
   let isTimerRunning = false;
@@ -56,20 +58,21 @@ const animateTimer = createTimerAnimator();
 inputEl.addEventListener("input", () => {
   // Очистите input так, чтобы в значении
   // оставались только числа
-
-  // Можно было бы просто задать инпуту type="number"
   if (/\D/.test(inputEl.value)) {
     inputEl.value = inputEl.value.replace(/\D/g, "");
   }
+  // Можно было бы просто задать инпуту type="number"
 });
 
 buttonEl.addEventListener("click", () => {
   const seconds = Number(inputEl.value);
-
+  // Проверка, что поле ввода не пустое
+  if (seconds === 0) {
+    return alert("Введите число в секундах");
   // Защитим таймер от переполнения, зададим максимально возможное для ввода время 99:59:59
-  seconds < TIMER_MAX_LIMIT
-    ? animateTimer(seconds)
-    : animateTimer(TIMER_MAX_LIMIT);
-
+  } else if (seconds >= TIMER_MAX_LIMIT) {
+    return alert("Время больше максимально допустимого");
+  }
+  animateTimer(seconds);
   inputEl.value = "";
 });
